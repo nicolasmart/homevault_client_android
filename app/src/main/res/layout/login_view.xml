@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".login.LoginView">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/homevault_login_backdrop"
+        android:scaleType="centerCrop"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center"
+        android:background="@drawable/login_bg_card"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:alpha="0.82"
+        android:elevation="20dp"
+        android:paddingBottom="18dp"
+        android:layout_marginBottom="150dp">
+
+        <ImageView
+            android:id="@+id/logo_big"
+            android:layout_width="match_parent"
+            android:layout_height="64sp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="27dp"
+            android:src="@drawable/ic_homevault_logo_big"/>
+
+        <TextView
+            android:id="@+id/app_slogan"
+            android:layout_width="match_parent"
+            android:layout_height="64sp"
+            app:layout_constraintTop_toTopOf="@id/logo_big"
+            android:layout_marginTop="73dp"
+            android:layout_marginBottom="27dp"
+            android:text="@string/app_slogan"
+            android:textAlignment="center"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/serverip_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/logo_big"
+            android:layout_marginTop="57dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:hint="@string/server_ip"
+            android:inputType="textVisiblePassword"/>
+
+        <EditText
+            android:id="@+id/username_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/serverip_field"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:hint="@string/username"
+            android:inputType="textVisiblePassword"/>
+
+        <EditText
+            android:id="@+id/password_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/username_field"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:imeOptions="actionSend" />
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/password_field"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="74dp"
+            android:layout_marginEnd="74dp"
+            android:text="@string/Login"
+            android:background="@drawable/rounded_theme_button"
+            android:textColor="#fff"
+            android:onClick="loginPost" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
