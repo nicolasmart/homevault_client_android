@@ -1,25 +1,34 @@
 package tk.homevault.main;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.http.HttpResponseCache;
 import android.os.Bundle;
 
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -29,6 +38,9 @@ import tk.homevault.main.login.AuthCheckActivity;
 import tk.homevault.main.login.LoginView;
 
 import android.view.Menu;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +49,11 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static FloatingActionMenu fab;
+
     private AppBarConfiguration mAppBarConfiguration;
+    private NavigationView navigationView;
+
     private static final String PREF_SERVERIP = "serverip";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_PASSWORD = "password";
@@ -58,16 +74,19 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab = findViewById(R.id.fab);
+        fab.setClosedOnTouchOutside(true);
+        //fab.removeAllMenuButtons();
+        /**fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                if (navigationView.getMenu().findItem(R.id.nav_home).isChecked()) createFolder();
+                else Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -87,13 +106,14 @@ public class MainActivity extends AppCompatActivity {
 
         String[] friendly_roles = {getString(R.string.administrator), getString(R.string.standard)};
 
-        if (serverip == null || username == null || password == null) {
+        if (serverip == null || username == null || password == null || userrole == null) {
             Intent intent = new Intent(this, LoginView.class);
             startActivity(intent);
             finish();
+            return;
         }
 
-        //new AuthCheckActivity(this).execute(serverip, username, password);
+        new AuthCheckActivity(this).execute(serverip, username, password);
 
         View header = navigationView.getHeaderView(0);
 
@@ -102,6 +122,10 @@ public class MainActivity extends AppCompatActivity {
 
         username_field.setText(username);
         userrole_field.setText(friendly_roles[Integer.parseInt(userrole)]);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1666);
+        }
     }
 
     @Override

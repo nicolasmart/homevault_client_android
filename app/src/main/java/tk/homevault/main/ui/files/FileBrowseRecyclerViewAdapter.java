@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,13 +19,16 @@ public class FileBrowseRecyclerViewAdapter extends RecyclerView.Adapter<FileBrow
     private List<String> mFiles;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private ItemLongClickListener mLongClickListener;
     private Integer folderCount;
+    private Boolean backArrow;
 
-    FileBrowseRecyclerViewAdapter(Context context, List<String> folders, List<String> files) {
+    FileBrowseRecyclerViewAdapter(Context context, List<String> folders, List<String> files, Boolean backArrow) {
         this.mInflater = LayoutInflater.from(context);
         this.mFolders = folders;
         this.mFiles = files;
         this.folderCount = folders.size();
+        this.backArrow = backArrow;
     }
 
     @Override
@@ -39,7 +43,8 @@ public class FileBrowseRecyclerViewAdapter extends RecyclerView.Adapter<FileBrow
         String name;
         if (position < folderCount) {
             holder.itemName.setText(mFolders.get(position));
-            holder.itemType.setImageResource(R.drawable.ic_folder);
+            if (position == 0 && backArrow) holder.itemType.setImageResource(R.drawable.ic_back_arrow);
+            else holder.itemType.setImageResource(R.drawable.ic_folder);
         }
         else {
             holder.itemName.setText(mFiles.get(position - folderCount));
@@ -55,20 +60,29 @@ public class FileBrowseRecyclerViewAdapter extends RecyclerView.Adapter<FileBrow
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView itemName;
         ImageView itemType;
+        ProgressBar downloadBar;
 
         ViewHolder(View itemView) {
             super(itemView);
             itemName = itemView.findViewById(R.id.text_filename);
             itemType = itemView.findViewById(R.id.type_icon);
+            downloadBar = itemView.findViewById(R.id.download_progress);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (mLongClickListener != null) return mLongClickListener.onItemLongClick(view, getAdapterPosition());
+            return true;
         }
     }
 
@@ -85,5 +99,15 @@ public class FileBrowseRecyclerViewAdapter extends RecyclerView.Adapter<FileBrow
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
+    }
+
+    // allows clicks events to be caught
+    void setLongClickListener(ItemLongClickListener itemLongClickListener) {
+        this.mLongClickListener = itemLongClickListener;
+    }
+
+    // parent activity will implement this method to respond to click events
+    public interface ItemLongClickListener {
+        boolean onItemLongClick(View view, int position);
     }
 }

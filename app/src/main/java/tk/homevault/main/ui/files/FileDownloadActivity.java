@@ -1,37 +1,39 @@
-package tk.homevault.main.login;
+package tk.homevault.main.ui.files;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.widget.Button;
-import android.widget.Toast;
+import android.view.View;
+import android.webkit.MimeTypeMap;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 
-import tk.homevault.main.MainActivity;
 import tk.homevault.main.R;
 
-public class AuthCheckActivity extends AsyncTask<String, String, String>{
+public class FileDownloadActivity extends AsyncTask<String, String, String>{
     private Context context;
+    private FilesFragment filesFragment;
     private String serverip;
     private String username;
     private String password;
+    private String directory;
+    private String basefn;
 
     private static final String PREF_SERVERIP = "serverip";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_PASSWORD = "password";
 
-    public AuthCheckActivity(Context context) {
+    public FileDownloadActivity(Context context, FilesFragment filesFragment) {
         this.context = context;
+        this.filesFragment = filesFragment;
     }
 
     protected void onPreExecute(){
@@ -43,34 +45,36 @@ public class AuthCheckActivity extends AsyncTask<String, String, String>{
             serverip = arg0[0];
             username = arg0[1];
             password = arg0[2];
+            directory = arg0[3];
+            basefn = arg0[4];
 
-            String link="http://"+serverip+"/mobile_methods/auth.php";
+            String link="http://"+serverip+"/mobile_methods/filedownload.php";
             String data  = URLEncoder.encode("username", "UTF-8") + "=" +
                     URLEncoder.encode(username, "UTF-8");
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +
                     URLEncoder.encode(password, "UTF-8");
+            data += "&" + URLEncoder.encode("directory", "UTF-8") + "=" +
+                    URLEncoder.encode(directory, "UTF-8");
 
             URL url = new URL(link);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection(Proxy.NO_PROXY);
-            conn.addRequestProperty("Cache-Control", "max-age=0");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setDoOutput(true);
+            conn.setConnectTimeout(100);
+            conn.setRequestMethod("POST");
+            conn.setInstanceFollowRedirects(false);
+            conn.setRequestProperty("Accept-Encoding", "gzip");
+            conn.setChunkedStreamingMode(1024);
+
+            conn.connect();
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
             wr.write( data );
             wr.flush();
 
-            BufferedReader reader = new BufferedReader(new
-                    InputStreamReader(conn.getInputStream()));
+            filesFragment.setStream(conn.getInputStream());
 
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-
-            while((line = reader.readLine()) != null) {
-                sb.append(line+'\n');
-            }
-
-            return sb.substring(0, sb.length() - 1);
+            return "done";
         } catch(Exception e){
             return new String(context.getString(R.string.server_not_responding));
         }
@@ -78,16 +82,10 @@ public class AuthCheckActivity extends AsyncTask<String, String, String>{
 
     @Override
     protected void onPostExecute(String result){
-        if (!result.contains("login_success_app_handler_key")) {
-            Intent intent = new Intent(context, LoginView.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            context.startActivity(intent);
-        }
-        else {
-            SharedPreferences sharedpreferences = context.getSharedPreferences("core_auth", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString("userrole", result.substring(result.length()-1));
-            editor.apply();
-        }
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_TITLE, basefn);
+        filesFragment.startActivityForResult(intent, 34);
     }
 }

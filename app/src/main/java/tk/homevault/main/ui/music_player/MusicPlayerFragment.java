@@ -6,27 +6,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionMenu;
+import com.google.android.material.snackbar.Snackbar;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import tk.homevault.main.MainActivity;
 import tk.homevault.main.R;
 
 public class MusicPlayerFragment extends Fragment {
 
-    private MusicPlayerViewModel slideshowViewModel;
+    private FloatingActionMenu fab;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                ViewModelProviders.of(this).get(MusicPlayerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_music_player, container, false);
         final TextView textView = root.findViewById(R.id.text_slideshow);
-        slideshowViewModel.getText().observe(this, new Observer<String>() {
+
+        textView.setText(getString(R.string.coming_soon));
+
+
+        fab = ((MainActivity) getActivity()).fab;
+        fab.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
         return root;

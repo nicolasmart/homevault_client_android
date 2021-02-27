@@ -1,23 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="10dp">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
 
-    <ImageView
-        android:id="@+id/type_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_folder"/>
-
-    <TextView
-        android:id="@+id/text_filename"
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/listLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginStart="12dp"
-        android:text="Sample"/>
+        android:orientation="horizontal"
+        android:padding="10dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/type_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_folder" />
+
+        <TextView
+            android:id="@+id/text_filename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Sample"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/listLayout">
+        <ProgressBar
+            android:id="@+id/download_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            android:layout_marginBottom="-8dp"
+            android:layout_marginTop="-4dp" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

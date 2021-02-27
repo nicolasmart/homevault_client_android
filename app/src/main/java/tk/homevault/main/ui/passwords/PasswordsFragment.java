@@ -15,20 +15,14 @@ import tk.homevault.main.R;
 
 public class PasswordsFragment extends Fragment {
 
-    private PasswordsViewModel toolsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        toolsViewModel =
-                ViewModelProviders.of(this).get(PasswordsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_passwords, container, false);
         final TextView textView = root.findViewById(R.id.text_tools);
-        toolsViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
+        textView.setText(getString(R.string.coming_soon));
+
         return root;
     }
 }

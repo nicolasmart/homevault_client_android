@@ -13,7 +13,6 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_tools">Tools</string>
@@ -22,7 +21,7 @@
     <string name="title_activity_main3">Main3Activity</string>
     <string name="server_ip">Cloud Server IP or Domain</string>
     <string name="server_not_responding">The server address you entered doesn\'t exist or if it does - a compatible HomeVault installation cannot be found.</string>
-    <string name="menu_files">File Storage</string>
+    <string name="menu_files">Files</string>
     <string name="menu_notes">Notes</string>
     <string name="menu_passwords">Passwords</string>
     <string name="menu_music">Music</string>
@@ -30,4 +29,17 @@
     <string name="standard">Standard User</string>
     <string name="fetching_data">Fetching data from the cloud...</string>
     <string name="error_fetching_data">An error has occured while fetching data from the server</string>
+    <string name="go_back">Go Back</string>
+    <string name="create_file_or_folder">Create a folder/file</string>
+    <string name="folder_name">New Folder name</string>
+    <string name="create_folder_ok">Add folder</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="upload_file_dialog">Upload file</string>
+    <string name="create_folder">Create a Folder</string>
+    <string name="save_to_device">Save to device</string>
+    <string name="move_file">Move</string>
+    <string name="copy_file">Copy</string>
+    <string name="delete_file">Delete</string>
+    <string name="file_destination">File destination</string>
+    <string name="coming_soon">Очаквайте скоро!</string>
 </resources>

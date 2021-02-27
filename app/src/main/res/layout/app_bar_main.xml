@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,12 +23,53 @@
 
     <include layout="@layout/content_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_add" />-->
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true"
+        fab:menu_backgroundColor="#ccffffff"
+        fab:menu_colorNormal="#17A67E"
+        fab:menu_colorPressed="#148767"
+        fab:menu_colorRipple="#106950">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_upload_file"
+            fab:fab_size="mini"
+            fab:fab_label="Upload File"
+            fab:fab_colorNormal="#17A67E"
+            fab:fab_colorPressed="#148767"
+            fab:fab_colorRipple="#106950"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_new_folder"
+            fab:fab_size="mini"
+            fab:fab_label="Create Folder"
+            fab:fab_colorNormal="#17A67E"
+            fab:fab_colorPressed="#148767"
+            fab:fab_colorRipple="#106950"/>
+
+    </com.github.clans.fab.FloatingActionMenu>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
