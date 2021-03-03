@@ -1,4 +1,4 @@
-package tk.homevault.main.ui.files;
+package tk.homevault.main.ui.gallery;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,38 +10,31 @@ import android.webkit.MimeTypeMap;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import androidx.annotation.Nullable;
-import tk.homevault.main.R;
+import tk.homevault.main.ui.files.FilesFragment;
 
-public class FileUploadActivity extends AsyncTask<String, String, String>{
+public class PhotoUploadActivity extends AsyncTask<String, String, String>{
     private Context context;
-    private FilesFragment filesFragment;
-    private Uri fileUri;
+    private String fileUri;
     private String serverip;
     private String username;
     private String password;
-    private String directory;
 
     private static final String PREF_SERVERIP = "serverip";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_PASSWORD = "password";
 
-    public FileUploadActivity(Context context, FilesFragment filesFragment, Uri fileUri) {
+    public PhotoUploadActivity(Context context, String fileUri) {
         this.context = context;
-        this.filesFragment = filesFragment;
         this.fileUri = fileUri;
     }
 
@@ -54,25 +47,24 @@ public class FileUploadActivity extends AsyncTask<String, String, String>{
             serverip = arg0[0];
             username = arg0[1];
             password = arg0[2];
-            directory = arg0[3];
 
-            String link="http://"+serverip+"/mobile_methods/itemupload.php";
+            String link="http://"+serverip+"/mobile_methods/file_upload.php";
 
             Log.d("fileupload", "1");
             Map<String, String> params = new HashMap<String, String>(3);
             params.put("username", username);
             params.put("password", password);
-            params.put("directory", directory);
+            params.put("directory", "/../photos/");
 
             Log.d("fileupload", "2");
             String type = null;
-            String extension = MimeTypeMap.getFileExtensionFromUrl(getFileDisplayName(fileUri));
+            String extension = MimeTypeMap.getFileExtensionFromUrl(fileUri);
             if (extension != null) {
                 type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
             }
 
             Log.d("fileupload", "3");
-            String result = multipartRequest(link, params, fileUri, "file_upload", type);
+            String result = multipartRequest(link, params, Uri.parse(fileUri), "file_upload", type);
             Log.d("fileupload", "4");
 
             return result;
@@ -85,7 +77,6 @@ public class FileUploadActivity extends AsyncTask<String, String, String>{
     @Override
     protected void onPostExecute(String result){
         Log.d("fileupload", result);
-        filesFragment.refreshPage();
     }
 
     public String multipartRequest(String urlTo, Map<String, String> parmas, Uri fileuri, String filefield, String fileMimeType) throws Exception {

@@ -1,14 +1,11 @@
-package tk.homevault.main.ui.files;
+package tk.homevault.main.ui.gallery;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -17,23 +14,23 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import tk.homevault.main.R;
+import tk.homevault.main.ui.files.FilesFragment;
 
-public class FileDownloadActivity extends AsyncTask<String, String, String>{
+public class PhotoFetchActivity extends AsyncTask<String, String, String>{
     private Context context;
-    private FilesFragment filesFragment;
+    private GalleryFragment galleryFragment;
     private String serverip;
     private String username;
     private String password;
     private String directory;
-    private String basefn;
 
     private static final String PREF_SERVERIP = "serverip";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_PASSWORD = "password";
 
-    public FileDownloadActivity(Context context, FilesFragment filesFragment) {
+    public PhotoFetchActivity(Context context, GalleryFragment galleryFragment) {
         this.context = context;
-        this.filesFragment = filesFragment;
+        this.galleryFragment = galleryFragment;
     }
 
     protected void onPreExecute(){
@@ -41,14 +38,14 @@ public class FileDownloadActivity extends AsyncTask<String, String, String>{
 
     @Override
     protected String doInBackground(String... arg0) {
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         try{
             serverip = arg0[0];
             username = arg0[1];
             password = arg0[2];
             directory = arg0[3];
-            basefn = arg0[4];
 
-            String link="http://"+serverip+"/mobile_methods/file_download.php";
+            String link="http://"+serverip+"/mobile_methods/gallery_fetch.php";
             String data  = URLEncoder.encode("username", "UTF-8") + "=" +
                     URLEncoder.encode(username, "UTF-8");
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +
@@ -72,9 +69,18 @@ public class FileDownloadActivity extends AsyncTask<String, String, String>{
             wr.write( data );
             wr.flush();
 
-            filesFragment.setStream(conn.getInputStream());
+            InputStream ird = conn.getInputStream();
+            BufferedReader reader = new BufferedReader(new
+                    InputStreamReader(ird));
 
-            return "done";
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+
+            while((line = reader.readLine()) != null) {
+                sb.append(line+'\n');
+            }
+
+            return sb.substring(0, sb.length() - 1);
         } catch(Exception e){
             return new String(context.getString(R.string.server_not_responding));
         }
@@ -82,10 +88,18 @@ public class FileDownloadActivity extends AsyncTask<String, String, String>{
 
     @Override
     protected void onPostExecute(String result){
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_TITLE, basefn);
-        filesFragment.startActivityForResult(intent, 34);
+        if (!result.contains("listing_success_key")) {
+            //filesFragment.textView.setText(filesFragment.getString(R.string.error_fetching_data));
+            //filesFragment.textView.setTypeface(null, Typeface.NORMAL);
+            //Log.d("FileFetchFail", result);
+        }
+        else {
+            galleryFragment.rvSetup(result.substring(20));
+            //filesFragment.textView.setText(directory);
+            //filesFragment.textView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            //filesFragment.textView.setTypeface(null, Typeface.ITALIC);
+            //filesFragment.rvSetup(result.substring(20));
+            //Log.d("FileFetchSuccess", result.substring(20));
+        }
     }
 }

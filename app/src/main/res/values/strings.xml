@@ -42,4 +42,10 @@
     <string name="delete_file">Delete</string>
     <string name="file_destination">File destination</string>
     <string name="coming_soon">Очаквайте скоро!</string>
+    <string name="action_backup">Backup</string>
+    <string name="title_activity_backup">BackupActivity</string>
+    <string name="backup_all_photos">Backup all device photos now</string>
+    <string name="file_deletion_q">Are you sure you want to permanently delete the selected file from the server?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

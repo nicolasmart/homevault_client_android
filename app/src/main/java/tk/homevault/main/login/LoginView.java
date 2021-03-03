@@ -34,10 +34,7 @@ public class LoginView extends AppCompatActivity {
             finish();
         }
 
-
-
         setContentView(R.layout.login_view);
-
 
         try
         {

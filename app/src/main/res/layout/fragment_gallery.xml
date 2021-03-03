@@ -3,16 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <GridView
-        android:id="@+id/galleryGridView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:verticalSpacing="2dp"
-        android:horizontalSpacing="2dp"
-        android:columnWidth="30dp"
-        android:stretchMode="columnWidth"
-        android:numColumns="4" >
-    </GridView>
+        android:layout_height="match_parent">
+        <GridView
+            android:id="@+id/galleryGridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:verticalSpacing="2dp"
+            android:horizontalSpacing="2dp"
+            android:columnWidth="30dp"
+            android:stretchMode="columnWidth"
+            android:numColumns="4" >
+        </GridView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

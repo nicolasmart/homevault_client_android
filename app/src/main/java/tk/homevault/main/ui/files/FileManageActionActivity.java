@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -48,17 +50,17 @@ public class FileManageActionActivity extends AsyncTask<String, String, String>{
             directory2 = arg0[4];
             action = arg0[5];
 
-            String link="http://"+serverip+"/mobile_methods/filemanageactions.php";
+            String link="http://"+serverip+"/mobile_methods/file_actions.php";
             String data  = URLEncoder.encode("username", "UTF-8") + "=" +
                     URLEncoder.encode(username, "UTF-8");
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +
                     URLEncoder.encode(password, "UTF-8");
             data += "&" + URLEncoder.encode("directory", "UTF-8") + "=" +
                     URLEncoder.encode(directory, "UTF-8");
-            data += "&" + URLEncoder.encode("directory2", "UTF-8") + "=" +
-                    URLEncoder.encode(directory, "UTF-8");
+            if (directory2 != null) data += "&" + URLEncoder.encode("directory2", "UTF-8") + "=" +
+                    URLEncoder.encode(directory2, "UTF-8");
             data += "&" + URLEncoder.encode("action", "UTF-8") + "=" +
-                    URLEncoder.encode(directory, "UTF-8");
+                    URLEncoder.encode(action, "UTF-8");
 
             URL url = new URL(link);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -87,8 +89,12 @@ public class FileManageActionActivity extends AsyncTask<String, String, String>{
                 sb.append(line+'\n');
             }
 
-            return sb.substring(0, sb.length() - 1);
+            return sb.toString();
         } catch(Exception e){
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            Log.d("FMAA0", e.getMessage() + '\n' + sw.toString() + '\n' + e.getCause() + '\n' + e.getLocalizedMessage());
             return new String(context.getString(R.string.server_not_responding));
         }
     }

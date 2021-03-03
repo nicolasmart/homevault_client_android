@@ -36,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import tk.homevault.main.login.AuthCheckActivity;
 import tk.homevault.main.login.LoginView;
+import tk.homevault.main.services.BackupService;
 
 import android.view.Menu;
 import android.view.ViewGroup;
@@ -103,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         String username = pref.getString(PREF_USERNAME, null);
         String password = pref.getString(PREF_PASSWORD, null);
         String userrole = pref.getString(PREF_USERROLE, null);
+        Boolean backupEnabled = pref.getBoolean("backup_enabled", false);
+
+        if (backupEnabled) startService(new Intent(this, BackupService.class));
 
         String[] friendly_roles = {getString(R.string.administrator), getString(R.string.standard)};
 
@@ -126,13 +130,6 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1666);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
-        return true;
     }
 
     @Override

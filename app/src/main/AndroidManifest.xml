@@ -14,6 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <service android:name="tk.homevault.main.services.BackupService"/>
+        <activity
+            android:name=".ui.gallery.backup.BackupActivity"
+            android:label="@string/title_activity_backup"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,8 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.LoginView">
-        </activity>
+        <activity android:name=".login.LoginView"></activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="tk.homevault"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

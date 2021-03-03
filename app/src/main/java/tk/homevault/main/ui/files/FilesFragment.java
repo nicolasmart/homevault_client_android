@@ -13,6 +13,8 @@ import android.text.Spanned;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -72,6 +74,8 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
         textView = root.findViewById(R.id.text_home);
         textView.setText(getString(R.string.fetching_data));
 
+        setHasOptionsMenu(true);
+
         SharedPreferences pref = getActivity().getSharedPreferences("core_auth", Context.MODE_PRIVATE);
         serverip = pref.getString(PREF_SERVERIP, null);
         username = pref.getString(PREF_USERNAME, null);
@@ -81,6 +85,7 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
         new DirectoryFetchActivity(getActivity(), this).execute(serverip, username, password, directory);
 
         fab = ((MainActivity) getActivity()).fab;
+        fab.setVisibility(View.VISIBLE);
         fab.setOnMenuButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,6 +115,12 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
         });
 
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main2, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public void rvSetup(String jsonResult) {
@@ -175,7 +186,7 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
     public boolean onItemLongClick(View view, final int position) {
         if (backArrow && position == 0) return false;
 
-        final String[] fileOptions = {getString(R.string.save_to_device), getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file)};
+        final String[] fileOptions = {/**getString(R.string.save_to_device), */ getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file)};
         final String[] folderOptions = {getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file)};
         String[] options = position < folderCount ? folderOptions : fileOptions;
 
@@ -183,14 +194,34 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
         builder.setTitle(fileViewAdapter.getItem(position));
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int option_index) {
-                if (position < folderCount) option_index++;
+            public void onClick(DialogInterface dialog, int option_index_def) {
+                /**if (position < folderCount)*/ //option_index++;
+                final int option_index = option_index_def + 1;
                 baseFilename = fileViewAdapter.getItem(position);
-                if (option_index>=1 && option_index<=2) fileDestination(fileOptions[option_index], option_index);
+                if (option_index>=1 && option_index<=2) fileDestination(fileOptions[option_index-1], option_index); /// REMOVE THE -1!!!
                 else if (option_index == 3) {
-                    Log.d("FilesFRG", directory + (directory.length()>1 ? "/" : "") + baseFilename);
-                    Log.d("FilesFRG2", String.valueOf(option_index));
-                    new FileManageActionActivity(getActivity(), FilesFragment.this).execute(serverip, username, password, directory + (directory.length()>1 ? "/" : "") + baseFilename, null, String.valueOf(option_index));
+
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    new FileManageActionActivity(getActivity(), FilesFragment.this).execute(serverip, username, password, directory + (directory.length()>1 ? "/" : "") + baseFilename, null, String.valueOf(option_index));
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    dialog.dismiss();
+                                    break;
+                            }
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage(getString(R.string.file_deletion_q)).setPositiveButton(getString(R.string.yes), dialogClickListener)
+                            .setNegativeButton(getString(R.string.no), dialogClickListener).show();
+                    //Log.d("FilesFRG", directory + (directory.length()>1 ? "/" : "") + baseFilename);
+                    //Log.d("FilesFRG2", String.valueOf(option_index));
+
 
                 }
             }
@@ -295,21 +326,6 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
         input.setSingleLine(true);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setHint(getString(R.string.file_destination));
-
-        final String blockCharacterSet = "/\\";
-        InputFilter filter = new InputFilter() {
-
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-
-                if (source != null && blockCharacterSet.contains(("" + source))) {
-                    return "";
-                }
-                return null;
-            }
-        };
-
-        input.setFilters(new InputFilter[] {filter});
 
         FrameLayout container = new FrameLayout(getActivity());
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

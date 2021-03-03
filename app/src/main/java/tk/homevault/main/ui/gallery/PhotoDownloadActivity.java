@@ -1,39 +1,42 @@
-package tk.homevault.main.ui.files;
+package tk.homevault.main.ui.gallery;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.view.View;
-import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.File;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import androidx.core.content.FileProvider;
 import tk.homevault.main.R;
+import tk.homevault.main.ui.files.FilesFragment;
 
-public class FileDownloadActivity extends AsyncTask<String, String, String>{
+public class PhotoDownloadActivity extends AsyncTask<String, String, String>{
     private Context context;
-    private FilesFragment filesFragment;
+    private GalleryFragment galleryFragment;
+    private ImageView gridImage;
     private String serverip;
     private String username;
     private String password;
     private String directory;
     private String basefn;
+    private File picFile;
+    private Uri uri;
 
     private static final String PREF_SERVERIP = "serverip";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_PASSWORD = "password";
 
-    public FileDownloadActivity(Context context, FilesFragment filesFragment) {
+    public PhotoDownloadActivity(Context context, GalleryFragment galleryFragment, ImageView gridImage) {
         this.context = context;
-        this.filesFragment = filesFragment;
+        this.galleryFragment = galleryFragment;
+        this.gridImage = gridImage;
     }
 
     protected void onPreExecute(){
@@ -46,7 +49,6 @@ public class FileDownloadActivity extends AsyncTask<String, String, String>{
             username = arg0[1];
             password = arg0[2];
             directory = arg0[3];
-            basefn = arg0[4];
 
             String link="http://"+serverip+"/mobile_methods/file_download.php";
             String data  = URLEncoder.encode("username", "UTF-8") + "=" +
@@ -72,7 +74,20 @@ public class FileDownloadActivity extends AsyncTask<String, String, String>{
             wr.write( data );
             wr.flush();
 
-            filesFragment.setStream(conn.getInputStream());
+            String imageName = "IMG_" + String.valueOf(System.currentTimeMillis()) +".jpg";
+            picFile = new File(galleryFragment.getActivity().getCacheDir(), imageName);
+            uri = FileProvider.getUriForFile(context, "tk.homevault", picFile);
+
+            OutputStream output = context.getContentResolver().openOutputStream(uri);
+
+            byte[] buffer = new byte[1024];
+            int bufferLength = 0;
+
+            while ( (bufferLength = conn.getInputStream().read(buffer)) > 0 ) {
+                output.write(buffer, 0, bufferLength);
+            }
+            output.flush();
+            output.close();
 
             return "done";
         } catch(Exception e){
@@ -82,10 +97,12 @@ public class FileDownloadActivity extends AsyncTask<String, String, String>{
 
     @Override
     protected void onPostExecute(String result){
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_TITLE, basefn);
-        filesFragment.startActivityForResult(intent, 34);
+        gridImage.setAlpha(1f);
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "image/*");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        galleryFragment.startActivity(intent);
     }
 }
