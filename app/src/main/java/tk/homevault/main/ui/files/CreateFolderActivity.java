@@ -43,7 +43,7 @@ public class CreateFolderActivity extends AsyncTask<String, String, String>{
             password = arg0[2];
             directory = arg0[3];
 
-            String link="http://"+serverip+"/mobile_methods/file_create_dir.php";
+            String link=serverip+"/mobile_methods/file_create_dir.php";
             String data  = URLEncoder.encode("username", "UTF-8") + "=" +
                     URLEncoder.encode(username, "UTF-8");
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +

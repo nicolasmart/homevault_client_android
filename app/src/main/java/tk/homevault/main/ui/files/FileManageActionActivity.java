@@ -50,7 +50,7 @@ public class FileManageActionActivity extends AsyncTask<String, String, String>{
             directory2 = arg0[4];
             action = arg0[5];
 
-            String link="http://"+serverip+"/mobile_methods/file_actions.php";
+            String link=serverip+"/mobile_methods/file_actions.php";
             String data  = URLEncoder.encode("username", "UTF-8") + "=" +
                     URLEncoder.encode(username, "UTF-8");
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +

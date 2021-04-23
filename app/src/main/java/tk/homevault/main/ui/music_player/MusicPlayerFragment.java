@@ -24,19 +24,13 @@ public class MusicPlayerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_music_player, container, false);
-        final TextView textView = root.findViewById(R.id.text_slideshow);
+        //final TextView textView = root.findViewById(R.id.text_slideshow);
 
-        textView.setText(getString(R.string.coming_soon));
+        //textView.setText(getString(R.string.coming_soon));
 
 
         fab = ((MainActivity) getActivity()).fab;
-        fab.setOnMenuButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setVisibility(View.GONE);
         return root;
     }
 }

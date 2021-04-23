@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".SettingsActivity"
+    tools:showIn="@layout/activity_settings">
+
+    <ImageView
+        android:id="@+id/logo_big"
+        android:layout_width="match_parent"
+        android:layout_height="64sp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="54dp"
+        android:layout_marginBottom="27dp"
+        android:src="@drawable/ic_homevault_logo_big"/>
+
+    <TextView
+        android:id="@+id/app_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/logo_big"
+        android:layout_marginTop="64dp"
+        android:justificationMode="inter_word"
+        android:text="@string/app_desc"
+        android:textSize="16sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        />
+
+    <TextView
+        android:id="@+id/app_foss"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/app_desc"
+        android:layout_marginTop="244dp"
+        android:text="@string/app_foss"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        />
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/app_desc"
+        android:layout_marginTop="300dp"
+        android:layout_marginStart="74dp"
+        android:layout_marginEnd="74dp"
+        android:text="@string/Logout"
+        android:background="@drawable/rounded_theme_button"
+        android:backgroundTint="#40000000"
+        android:textColor="#fff"
+        android:onClick="logOut" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

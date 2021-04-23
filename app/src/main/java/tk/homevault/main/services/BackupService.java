@@ -109,7 +109,7 @@ public class BackupService extends Service {
 
                         currImg = new File(absolutePathOfImage);
 
-                        String link="http://"+serverip+"/mobile_methods/file_upload.php";
+                        String link=serverip+"/mobile_methods/file_upload.php";
 
                         Map<String, String> params2 = new HashMap<String, String>(4);
                         params2.put("username", username);

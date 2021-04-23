@@ -56,7 +56,7 @@ public class FileUploadActivity extends AsyncTask<String, String, String>{
             password = arg0[2];
             directory = arg0[3];
 
-            String link="http://"+serverip+"/mobile_methods/itemupload.php";
+            String link=serverip+"/mobile_methods/file_upload.php";
 
             Log.d("fileupload", "1");
             Map<String, String> params = new HashMap<String, String>(3);

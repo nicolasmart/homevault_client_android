@@ -43,6 +43,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import tk.homevault.main.MainActivity;
 import tk.homevault.main.R;
+import tk.homevault.main.SettingsActivity;
 import tk.homevault.main.ui.gallery.backup.BackupActivity;
 
 public class GalleryFragment extends Fragment {
@@ -114,6 +115,9 @@ public class GalleryFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_backup :
                 startActivity(new Intent(getActivity(), BackupActivity.class));
+                return true;
+            case R.id.action_settings :
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -187,7 +191,7 @@ public class GalleryFragment extends Fragment {
                 picturesView = (ImageView) convertView;
             }
 
-            Glide.with(context).load("http://" + serverip + "/users/" + username + "/photos/" + images.get(position))
+            Glide.with(context).load(serverip + "/users/" + username + "/photos/" + images.get(position))
                     .placeholder(new ColorDrawable(0x66DDDDDD)).centerCrop()
                     .into(picturesView);
 

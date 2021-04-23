@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -43,6 +44,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import tk.homevault.main.MainActivity;
 import tk.homevault.main.R;
+import tk.homevault.main.SettingsActivity;
+import tk.homevault.main.ui.gallery.backup.BackupActivity;
 
 public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAdapter.ItemClickListener, FileBrowseRecyclerViewAdapter.ItemLongClickListener {
 
@@ -186,7 +189,7 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
     public boolean onItemLongClick(View view, final int position) {
         if (backArrow && position == 0) return false;
 
-        final String[] fileOptions = {/**getString(R.string.save_to_device), */ getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file)};
+        final String[] fileOptions = {/**getString(R.string.save_to_device), */ getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file), getString(R.string.rename)};
         final String[] folderOptions = {getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file)};
         String[] options = position < folderCount ? folderOptions : fileOptions;
 
@@ -198,7 +201,7 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
                 /**if (position < folderCount)*/ //option_index++;
                 final int option_index = option_index_def + 1;
                 baseFilename = fileViewAdapter.getItem(position);
-                if (option_index>=1 && option_index<=2) fileDestination(fileOptions[option_index-1], option_index); /// REMOVE THE -1!!!
+                if (option_index>=1 && option_index<=2 || option_index==4) fileDestination(fileOptions[option_index-1], option_index); /// REMOVE THE -1!!!
                 else if (option_index == 3) {
 
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -252,6 +255,17 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
             Uri uri = data.getData();
 
             new FileUploadActivity(getActivity(), this, uri).execute(serverip, username, password, directory);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings :
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

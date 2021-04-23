@@ -53,7 +53,9 @@ public class LoginActionActivity extends AsyncTask<String, String, String>{
             username = arg0[1];
             password = arg0[2];
 
-            String link="http://"+serverip+"/mobile_methods/auth.php";
+            if (!(serverip.startsWith("https://") || serverip.startsWith("http://"))) serverip = "http://" + serverip;
+
+            String link=serverip+"/mobile_methods/auth.php";
             String data  = URLEncoder.encode("username", "UTF-8") + "=" +
                     URLEncoder.encode(username, "UTF-8");
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +
