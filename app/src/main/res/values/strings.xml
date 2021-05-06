@@ -57,4 +57,6 @@
     <string name="backup_desc">This graphic shows you how much of your device storage is being used. By enabling auto backup, all of your photos will get automatically synced to your HomeVault account, after which you can delete the original copies from your phone to save space.</string>
     <string name="disable_backup">Disable auto-backup for new photos</string>
     <string name="rename">Rename</string>
+    <string name="encrypt">Encrypt</string>
+    <string name="decrypt">Decrypt</string>
 </resources>

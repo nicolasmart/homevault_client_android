@@ -20,10 +20,6 @@
             android:id="@+id/nav_notes"
             android:icon="@drawable/ic_menu_notes"
             android:title="@string/menu_notes" />
-        <item
-            android:id="@+id/nav_passwords"
-            android:icon="@drawable/ic_menu_passwords"
-            android:title="@string/menu_passwords" />
     </group>
 
 </menu>

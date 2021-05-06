@@ -189,19 +189,19 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
     public boolean onItemLongClick(View view, final int position) {
         if (backArrow && position == 0) return false;
 
-        final String[] fileOptions = {/**getString(R.string.save_to_device), */ getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file), getString(R.string.rename)};
-        final String[] folderOptions = {getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file)};
-        String[] options = position < folderCount ? folderOptions : fileOptions;
+        final String[] fileOptions = {getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file), getString(R.string.rename), getString(R.string.encrypt)};
+        final String[] encryptedFileOptions = {getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file), getString(R.string.rename), getString(R.string.decrypt)};
+        final String[] folderOptions = {getString(R.string.move_file), getString(R.string.copy_file), getString(R.string.delete_file), getString(R.string.rename)};
+        String[] options = position < folderCount ? folderOptions : (fileViewAdapter.getItem(position).endsWith(".crypt") ? encryptedFileOptions : fileOptions);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(fileViewAdapter.getItem(position));
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int option_index_def) {
-                /**if (position < folderCount)*/ //option_index++;
                 final int option_index = option_index_def + 1;
                 baseFilename = fileViewAdapter.getItem(position);
-                if (option_index>=1 && option_index<=2 || option_index==4) fileDestination(fileOptions[option_index-1], option_index); /// REMOVE THE -1!!!
+                if (option_index>=1 && option_index<=2 || option_index==4) fileDestination(fileOptions[option_index-1], option_index);
                 else if (option_index == 3) {
 
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -222,9 +222,15 @@ public class FilesFragment extends Fragment implements FileBrowseRecyclerViewAda
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage(getString(R.string.file_deletion_q)).setPositiveButton(getString(R.string.yes), dialogClickListener)
                             .setNegativeButton(getString(R.string.no), dialogClickListener).show();
-                    //Log.d("FilesFRG", directory + (directory.length()>1 ? "/" : "") + baseFilename);
-                    //Log.d("FilesFRG2", String.valueOf(option_index));
 
+                }
+                else if (option_index == 5) {
+
+                    if (fileViewAdapter.getItem(position).endsWith(".crypt")) {
+                        new FileManageActionActivity(getActivity(), FilesFragment.this).execute(serverip, username, password, directory + (directory.length()>1 ? "/" : "") + baseFilename, null, "6");
+                    } else {
+                        new FileManageActionActivity(getActivity(), FilesFragment.this).execute(serverip, username, password, directory + (directory.length()>1 ? "/" : "") + baseFilename, null, "5");
+                    }
 
                 }
             }

@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.util.Locale;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -37,10 +39,7 @@ public class NotesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_notes, container, false);
-        //final TextView textView = root.findViewById(R.id.text_send);
-
-        //textView.setText(getString(R.string.coming_soon));
-        WebView webView = (WebView) root.findViewById(R.id.webview);
+        WebView webView = root.findViewById(R.id.webview);
 
         SharedPreferences pref = getActivity().getSharedPreferences("core_auth", Context.MODE_PRIVATE);
         serverip = pref.getString(PREF_SERVERIP, null);
@@ -59,6 +58,7 @@ public class NotesFragment extends Fragment {
                 "<form action='" + serverip + "/notes.php' method='post' name='frm1'>" +
                 "  <input type='hidden' name='username' value='" + username + "'><br>" +
                 "  <input type='hidden' name='password' value='" + password + "'><br>" +
+                "  <input type='hidden' name='language' value='" + Locale.getDefault().getLanguage() + "'><br>" +
                 (nightModeFlags == Configuration.UI_MODE_NIGHT_YES ? "  <input type='hidden' name='dark_mode' value='1'><br>" : "<br>" ) +
                 "</form>" +
                 "</body>" +
