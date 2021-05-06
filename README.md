@@ -8,4 +8,4 @@ This app is meant to be used as a client for the HomeVault Server project. You c
 
 ## Download binaries
 
-The latest available release is [v0.1](https://github.com/nicolasmart/homevault_client_android/releases/download/v0.1/homevault_v0.1.apk).
+The latest available release is [v0.5](https://github.com/nicolasmart/homevault_client_android/releases/download/v0.5/homevault_v0.5.apk).
